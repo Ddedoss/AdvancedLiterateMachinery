@@ -33,6 +33,11 @@ def general_text_reading_example(image):
     text_recognition_configs['model_path'] = 'damo/cv_convnextTiny_ocr-recognition-general_damo'  # alternatives: 'damo/cv_convnextTiny_ocr-recognition-scene_damo', 'damo/cv_convnextTiny_ocr-recognition-document_damo', 'damo/cv_convnextTiny_ocr-recognition-handwritten_damo' 
     configs['text_recognition_configs'] = text_recognition_configs
 
+    text_recognition_configs_ru = dict()
+    text_recognition_configs_ru['from_modelscope_flag'] = False
+    configs['text_recognition_configs'] = text_recognition_configs_ru
+
+
     # initialize
     text_reader = GeneralTextReading(configs)
 

@@ -24,3 +24,5 @@ tmp*.py
 __pycache__
 .idea/
 *.new
+venv
+.vscode

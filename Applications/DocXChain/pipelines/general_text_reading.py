@@ -4,10 +4,12 @@
 # Part of this implementation is borrowed from https://modelscope.cn/studios/damo/cv_ocr-text-spotting/file/view/master/app.py
 
 import sys
+
 import numpy as np
 
 from modules.text_detection import TextDetection
 from modules.text_recognition import TextRecognition
+
 
 class GeneralTextReading(object):
     """

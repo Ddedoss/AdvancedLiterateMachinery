@@ -4,12 +4,17 @@
 # Part of this implementation is borrowed from https://modelscope.cn/studios/damo/cv_ocr-text-spotting/file/view/master/app.py
 
 import sys
+sys.path.append('/home/danila/crnn-pytorch/src')
+from pathlib import Path
 import numpy as np
 import math
 import cv2
 
 from modelscope.pipelines import pipeline
 from modelscope.utils.constant import Tasks
+
+from PIL import Image
+from predict import main as predict_main
 
 class TextRecognition(object):
     """
@@ -25,12 +30,12 @@ class TextRecognition(object):
         Description:
           initialize the class instance
         """
-
+        self.from_modulescope = configs['from_modelscope_flag']
         # initialize and launch module
-        if configs['from_modelscope_flag'] is True:
+        if self.from_modulescope is True:
             self.text_recognizer = pipeline(Tasks.ocr_recognition, model = configs['model_path'])  # text recognition model from modelscope
         else:
-            self.text_recognizer = None  # (20230811) currently we only support models from modelscope
+            self.text_recognizer = predict_main  # (20230811) currently we only support models from modelscope
 
     def __call__(self, image, detections):
         """
@@ -54,6 +59,11 @@ class TextRecognition(object):
             for i in range(detections.shape[0]):  # this part can be largely accelerated via parallelization (leave for future work)
                 pts = self.order_point(detections[i])
                 image_crop = self.crop_image(image, pts)
+                if not self.from_modulescope:
+                  im = Image.fromarray(image_crop)
+                  im_path = Path.cwd().joinpath(f".temp_images/{i}.png")
+                  im.save(str(im_path))
+                  image_crop = str(im_path)
                 rec = self.text_recognizer(image_crop)
                 result.append(rec)
 
